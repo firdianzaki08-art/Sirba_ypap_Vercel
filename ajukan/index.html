@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ajukan Reimbursement BBM · SIRBA</title>
+<meta name="description" content="Formulir pengajuan reimbursement BBM perjalanan dinas Sekolah Avicenna tanpa login. Jarak dan biaya dihitung otomatis, PDF formulir dibuat dan ditandatangani secara elektronik.">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="../icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="manifest" href="../site.webmanifest">
+<meta name="theme-color" content="#e65d0c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f6f4f2; --surface:#ffffff; --ink:#3d3d3f; --muted:#6c6a69; --line:#e6e0db;
+  --accent:#e05a0e; --accent-ink:#ffffff; --accent-soft:#fdeadf; --gold:#9a6a10; --danger:#c0362c; --ok:#2f7d3b;
+  --als1:#a8cf45; --als2:#ec5f6b; --als3:#6797d2; --als4:#f4b740; color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Poppins",system-ui,sans-serif;font-size:14.5px;line-height:1.55;padding:20px 16px 56px}
+.wrap{max-width:860px;margin:0 auto;display:grid;gap:16px}
+.brand{background:#fff;border-radius:10px;padding:14px 18px 0;display:grid;gap:12px;overflow:hidden;border:1px solid var(--line)}
+.brand .logos{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand .yys{height:50px;width:auto;max-width:70%;object-fit:contain}
+.brand .als{height:76px;margin-block:-8px;width:auto;object-fit:contain}
+@media (max-width:520px){.brand .yys{height:36px}.brand .als{height:48px}}
+.stripe{display:grid;grid-template-columns:repeat(4,1fr);height:5px;margin:0 -18px}
+.stripe i:nth-child(1){background:var(--als1)}.stripe i:nth-child(2){background:var(--als2)}.stripe i:nth-child(3){background:var(--als3)}.stripe i:nth-child(4){background:var(--als4)}
+header{display:grid;gap:4px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700}
+h1{font-weight:700;font-size:clamp(22px,4vw,30px);line-height:1.25;margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px;min-width:0}
+h2{font-weight:600;font-size:17px;margin:0;display:flex;gap:10px;align-items:center}
+h2 .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:13px;color:#fff;flex:none}
+.c1{background:var(--als3)}.c2{background:var(--als1)}.c3{background:var(--als4)}.c4{background:var(--als2)}.c5{background:var(--accent)}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+@media (max-width:560px){.fields{grid-template-columns:1fr}}
+.full{grid-column:1/-1}
+label{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+label .opt{font-weight:400}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent);outline-offset:0;border-color:var(--accent)}
+input[readonly]{background:#f1eeeb}
+.kosong{border-color:var(--als2)!important;background:color-mix(in srgb,var(--als2) 7%,#fff)!important}
+.hint{font-size:12.5px;color:var(--muted);margin:0}
+.warn{font-size:13px;color:var(--danger);margin:0}
+.btn{font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.big{padding:13px 20px;font-size:15.5px;width:100%}
+/* pencarian lokasi */
+.cari{position:relative}
+.saran{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:5;max-height:280px;overflow:auto;padding:4px}
+.saran button{all:unset;display:block;width:100%;box-sizing:border-box;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.saran button:hover,.saran button:focus{background:var(--accent-soft)}
+.saran small{display:block;color:var(--muted);font-size:12px}
+.saran .ket{padding:8px 10px;font-size:12.5px;color:var(--muted)}
+.pilih{font-size:12.5px;color:var(--ok);font-weight:500}
+.saran button.baru{color:var(--accent);font-weight:600;border-top:1px solid var(--line);border-radius:0 0 10px 10px}
+.titik{margin:0;font-size:13px;background:var(--bg);border-radius:10px;padding:8px 12px}
+.titik.ok{color:var(--ok);background:color-mix(in srgb,var(--als1) 14%,#fff)}
+.titik a{color:var(--accent)}
+textarea{resize:vertical}
+.petaBox{display:grid;gap:10px}
+.petaHead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.linkbtn{color:var(--accent);font-weight:600;font-size:13px;text-decoration:none}
+.peta{height:320px;border-radius:10px;border:1px solid var(--line);overflow:hidden;z-index:0;background:#eef0ea}
+@media (max-width:560px){.peta{height:260px}}
+.pin span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:#fff;font-weight:700;font-size:13px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.ruteList{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.ruteOpsi{all:unset;box-sizing:border-box;display:grid;gap:2px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;background:#fff;font-size:13.5px}
+.ruteOpsi:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.ruteOpsi.aktif{border-color:var(--accent);background:var(--accent-soft)}
+.ruteOpsi small{color:var(--muted);font-size:12px}
+.ruteOpsi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gmBox{display:grid;grid-template-columns:2fr 1fr;gap:10px;padding:12px;border:1.5px solid var(--accent);border-radius:10px;background:var(--accent-soft)}
+.gmBox>b,.gmBox>ol,.gmBox>p{grid-column:1/-1;margin:0}
+.gmBox ol{padding-left:18px;font-size:13px;color:var(--muted);display:grid;gap:2px}
+@media(max-width:560px){.gmBox{grid-template-columns:1fr}}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:0 7px;border-radius:10px;background:var(--accent);color:#fff;vertical-align:1px}
+.tag.hijau{background:var(--ok)}.tag.biru{background:var(--als3)}.tag.abu{background:#8a8f98}
+/* hasil hitung */
+.hasil{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:620px){.hasil{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--bg);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.kpi span{font-size:12px;color:var(--muted)}
+.kpi b{font-size:17px;font-variant-numeric:tabular-nums}
+.kpi.total{background:var(--accent-soft)}.kpi.total b{color:var(--accent)}
+/* checkbox */
+.cekList{display:grid;gap:12px}
+.cek span{display:grid;gap:2px}.cek small{font-weight:400;color:var(--muted);font-size:12.5px;line-height:1.45}.cek em{font-style:normal;font-size:11px;font-weight:600;padding:1px 7px;border-radius:10px;margin-left:4px;vertical-align:1px}.cek em.wjb{background:#FDE3D2;color:#A9420A}.cek em.ops{background:#EEF2F7;color:#4A6A93}.dokWajib{margin:0 0 4px;font-size:13.5px;line-height:1.5;background:#FFF4EC;border:1px solid #F6D3BC;border-radius:10px;padding:10px 12px;color:var(--ink)}
+
+.cek{display:flex;gap:10px;align-items:flex-start;font-weight:500;color:var(--ink);font-size:14px;cursor:pointer}
+.cek input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.pernyataan{background:var(--bg);border-radius:10px;padding:12px 14px;margin:0}
+/* popup */
+.dlg{position:fixed;inset:0;background:rgba(30,25,20,.45);display:grid;place-items:center;padding:16px;z-index:30}
+.dlg .box{background:#fff;border-radius:10px;max-width:520px;width:100%;padding:22px;display:grid;gap:14px;max-height:calc(100vh - 32px);overflow:auto}
+.dlg h3{margin:0;font-size:18px}
+.ringkas{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px;margin:0;background:var(--bg);border-radius:10px;padding:12px 14px}
+.ringkas dt{color:var(--muted)}.ringkas dd{margin:0;font-weight:500}
+.setuju{background:var(--accent-soft);border-radius:10px;padding:12px 14px}
+.btns{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:10px;font-size:13px;z-index:40;max-width:calc(100% - 32px)}
+.sukses{text-align:center;justify-items:center}
+.sukses .ikon{width:56px;height:56px;border-radius:50%;background:color-mix(in srgb,var(--als1) 30%,#fff);display:grid;place-items:center;color:var(--ok);font-size:28px;font-weight:700}
+.sukses .no{font-size:22px;font-weight:700;color:var(--accent)}
+.foot{font-size:12.5px;color:var(--muted);text-align:center}
+.foot a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="logos"><img class="yys" src="../logo-yayasan.png" alt="Yayasan Pendidikan Avicenna Prestasi"><img class="als" src="../logo-als.png" alt="Avicenna Leadership School"></div><div class="stripe"><i></i><i></i><i></i><i></i></div></div>
+  <header>
+    <span class="eyebrow">SIRBA · Sistem Reimbursement BBM Avicenna</span>
+    <h1>Formulir pengajuan reimbursement BBM</h1>
+    <p>Isi data perjalanan dinas, jarak dan biaya dihitung otomatis. Setelah ditandatangani, formulir PDF langsung terkirim ke Finance AP cabang Anda. Tidak perlu login.</p>
+  </header>
+
+  <form id="form" novalidate>
+  <div style="display:grid;gap:16px">
+  <section class="card">
+    <h2><span class="n c1">A</span>Data pemohon</h2>
+    <div class="fields">
+      <label class="full">Cabang sekolah<select id="cabang"><option value="">Pilih cabang</option><option value="CNR">Avicenna Cinere</option><option value="PML">Avicenna Pamulang</option><option value="JGK">Avicenna Jagakarsa</option></select></label>
+      <label>Nama karyawan<input id="nama" autocomplete="name" maxlength="100" placeholder="Nama lengkap"></label>
+      <label>NIK / ID karyawan<input id="nik" maxlength="40" placeholder="mis. AVI-7019"></label>
+      <label class="full">Jabatan / unit<input id="jabatan" maxlength="120" placeholder="mis. Guru Matematika / SMP Cinere"></label>
+      <label>Jenis kendaraan<select id="kend"><option value="mobil">Mobil · 13 km/L</option><option value="motor">Motor · 40 km/L</option></select></label>
+      <label>Merek / tipe (opsional)<input id="unitKend" maxlength="60" placeholder="mis. Avanza"></label>
+      <label>Jenis BBM<select id="bbm"></select></label>
+      <label>Tanggal pengajuan<input id="tglAju" readonly></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n c2">B</span>Rincian perjalanan dinas</h2>
+    <div class="fields">
+      <label>Tanggal perjalanan dinas<input id="tgl" type="date"></label>
+      <span></span>
+      <div class="full cari"><label>Asal keberangkatan<input id="asal" autocomplete="off" placeholder="Pilih dari daftar checkpoint"></label><div class="saran" id="asalSaran" hidden></div><p class="pilih" id="asalPilih"></p></div>
+      <div class="full cari"><label>Tujuan dinas<input id="tujuan" autocomplete="off" placeholder="Pilih dari daftar checkpoint"></label><div class="saran" id="tujuanSaran" hidden></div><p class="pilih" id="tujuanPilih"></p></div>
+      <label class="full">Keterangan / keperluan<input id="keperluan" maxlength="300" placeholder="mis. Mengantar siswa lomba"></label>
+    </div>
+    <div class="hasil" aria-live="polite">
+      <div class="kpi"><span>Jarak sekali jalan</span><b id="oKm">-</b></div>
+      <div class="kpi"><span>Jarak pulang pergi (×2 + 5%)</span><b id="oKmPP">-</b></div>
+      <div class="kpi"><span>Biaya BBM</span><b id="oBbm">-</b></div>
+      <div class="kpi total"><span>Total pengajuan</span><b id="oTotal">Rp 0</b></div>
+    </div>
+    <div id="petaBox" hidden class="petaBox">
+      <div class="gmBox" id="gmBox">
+        <b>Rute acuan dari Google Maps <span class="tag">Wajib</span></b>
+        <ol><li>Tekan <a id="gmaps" class="linkbtn" target="_blank" rel="noopener">Buka rute di Google Maps ↗</a>, lalu pilih jalur yang Anda lewati. Untuk motor, pilih jalur tanpa tol.</li>
+          <li>Tekan <b>Bagikan</b> lalu <b>Salin link</b>, tempel di bawah.</li>
+          <li>Ketik jarak sekali jalan yang tertera di Google Maps. Jarak ini yang dipakai untuk menghitung biaya.</li></ol>
+        <label>Link rute Google Maps<input id="gmLink" inputmode="url" autocomplete="off" placeholder="https://maps.app.goo.gl/..."></label>
+        <label>Jarak di Google Maps (km)<input id="gmKm" inputmode="decimal" autocomplete="off" placeholder="mis. 12,4"></label>
+        <p class="hint" id="gmKet"></p>
+      </div>
+    </div>
+    <p class="hint" id="oKet">Pilih asal dan tujuan dari daftar checkpoint. Bila lokasi belum ada, pilih "Tambah checkpoint baru". Setelah itu isi rute dan jarak dari Google Maps.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="n c3">C</span>Dokumen pendukung yang dilampirkan</h2>
+    <p class="dokWajib"><b>Semua dokumen di bawah wajib dilampirkan dan diserahkan dalam bentuk fisik ke tim GA.</b> Centang setiap dokumen sebagai pernyataan bahwa dokumen aslinya akan kamu serahkan. Pengajuan yang dokumen fisiknya tidak lengkap akan dikembalikan saat verifikasi GA.</p>
+    <div class="cekList" id="dokList">
+      <label class="cek"><input type="checkbox" name="dok" value="struk"><span><b>Struk pembelian BBM</b> <em class="wjb">wajib</em><small>Struk asli dari SPBU sesuai tanggal perjalanan dinas, sebagai bukti pengisian BBM.</small></span></label>
+      <label class="cek"><input type="checkbox" name="dok" value="surat"><span><b>Surat tugas / undangan meeting / bukti tujuan dinas</b> <em class="wjb">wajib</em><small>Surat tugas dari atasan, undangan rapat, atau dokumen lain yang menunjukkan tujuan dan tanggal dinas.</small></span></label>
+      <label class="cek"><input type="checkbox" name="dok" value="rute"><span><b>Catatan jarak tempuh / screenshot rute (Google Maps)</b> <em class="wjb">wajib</em><small>Cetakan screenshot rute Google Maps dari asal ke tujuan, sama dengan link rute di formulir, yang memperlihatkan jarak (km).</small></span></label>
+      <label class="cek"><input type="checkbox" name="dok" value="lain" id="dokLainCek"><span><b>Lainnya</b> <em class="ops">opsional</em><small>Dokumen tambahan bila ada.</small></span></label>
+      <input id="dokLain" maxlength="120" placeholder="Sebutkan dokumen lainnya" hidden>
+    </div>
+    <p class="hint">Serahkan semua dokumen fisik ke tim GA setelah pengajuan disetujui Finance AP dan Kepala TU.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="n c4">D</span>Pernyataan pemohon</h2>
+    <p class="pernyataan">Saya menyatakan bahwa data dan rincian yang tercantum pada formulir ini adalah benar dan sesuai dengan perjalanan dinas yang telah dilakukan untuk kepentingan perusahaan.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="n c5">E</span>Tanda tangan pemohon</h2>
+    <label>Nama penanda tangan<input id="ttdNama" maxlength="100" placeholder="Nama sesuai tanda tangan"></label>
+    <p class="hint">Tanda tangan pemohon berupa QR yang dibuat otomatis di kolom Pemohon pada PDF, berisi nama penanda tangan, waktu tanda tangan, dan kode verifikasi.</p>
+    <p class="warn" id="warn" hidden></p>
+    <button class="btn big" id="kirim" type="submit">Tanda tangani dan kirim ke Finance AP</button>
+  </section>
+  </div>
+  </form>
+
+  <section class="card sukses" id="sukses" hidden>
+    <div class="ikon">✓</div>
+    <h2 style="justify-content:center">Pengajuan terkirim</h2>
+    <div class="no" id="sNo"></div>
+    <p class="hint" id="sKet"></p>
+    <div class="btns" style="justify-content:center"><button class="btn" id="sUnduh" type="button">Unduh PDF formulir</button><button class="btn ghost" id="sBaru" type="button">Buat pengajuan baru</button></div>
+  </section>
+
+  <p class="foot">Karyawan dengan akun SIRBA (Finance AP, Kepala TU, GA) masuk lewat <a href="../">halaman login</a>.</p>
+</div>
+
+<div class="dlg" id="cpDlg" hidden role="dialog" aria-modal="true" aria-labelledby="cpJudul">
+  <div class="box">
+    <h3 id="cpJudul">Checkpoint baru</h3>
+    <p class="hint">Lengkapi data lokasi. Checkpoint tersimpan di SIRBA dan diverifikasi tim GA.</p>
+    <label>Nama tempat<input id="cpNama" maxlength="80" placeholder="mis. Rumah Anita, atau Gedung Sate Bandung"></label>
+    <label>Kategori<select id="cpJenis"><option value="rumah">Rumah pegawai</option><option value="kantor">Kantor / instansi</option><option value="lainnya">Lainnya (sekolah lain, tempat acara, dll.)</option></select></label>
+    <label>Alamat lengkap<textarea id="cpAlamat" rows="2" maxlength="250" placeholder="Jalan, nomor, RT/RW, kelurahan, kecamatan, kota"></textarea></label>
+    <div class="cari"><label>Titik lokasi di peta<input id="cpCari" autocomplete="off" placeholder="Cari nama tempat, atau tempel link Google Maps"></label><div class="saran" id="cpSaran" hidden></div></div>
+    <input id="cpLink" type="hidden">
+    <button type="button" class="btn ghost" id="cpGps">Pakai lokasi saya sekarang</button>
+    <p class="titik" id="cpTitik"></p>
+    <p class="hint">Data rumah pegawai tidak ditampilkan ke pemohon lain.</p>
+    <p class="warn" id="cpErr" hidden></p>
+    <div class="btns"><button class="btn ghost" type="button" id="cpBatal">Batal</button><button class="btn" type="button" id="cpSimpan">Simpan checkpoint</button></div>
+  </div>
+</div>
+<div class="dlg" id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlgJudul">
+  <div class="box">
+    <h3 id="dlgJudul">Persetujuan tanda tangan elektronik</h3>
+    <dl class="ringkas" id="dlgRingkas"></dl>
+    <p class="hint">Dokumen ini akan dibuat sebagai PDF Formulir Pengajuan Reimbursement Biaya Bensin, ditandatangani dengan QR atas nama <b id="dlgNama"></b>, lalu dikirim ke Finance AP cabang untuk disetujui.</p>
+    <label class="cek setuju"><input type="checkbox" id="dlgSetuju">Saya menyetujui untuk menandatangani dokumen ini secara elektronik. Saya menyatakan data di dalamnya benar, dan tanda tangan ini berlaku sebagai tanda tangan saya pada dokumen ini.</label>
+    <p class="warn" id="dlgErr" hidden></p>
+    <div class="btns"><button class="btn ghost" type="button" id="dlgBatal">Batal</button><button class="btn" type="button" id="dlgOk" disabled>Setuju dan tanda tangani</button></div>
+  </div>
+</div>
+<footer class="kredit"><span>Sistem ini dibuat oleh</span><a href="#" onclick="return false" aria-label="Hipo Plus"><img src="../hipoplus.png" alt="Hipo Plus" width="72" height="50"></a><span>Hipo Plus · #House of Solutions</span></footer>
+<style>.kredit{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 10px;margin:28px auto 0;color:#8a7f76;font-size:12.5px;text-align:center}.kredit img{display:block;height:34px;width:auto;opacity:.85}.kredit a{cursor:default}@media print{.kredit{display:none}}</style>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="../form-pdf.js"></script>
+<script>
+const SB_URL="https://nwyuhzbzkzmelorgfwla.supabase.co",SB_KEY="sb_publishable_X6VyZbMQkk3ILwkKP4vvTw_zcdXHcKH";
+const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false}}):null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rp=n=>"Rp "+Math.round(n||0).toLocaleString("id-ID");
+const angka=n=>Math.round(n||0).toLocaleString("id-ID");
+const fkm=n=>(+n||0).toLocaleString("id-ID",{maximumFractionDigits:1});
+const up=(n,s)=>s>1?Math.ceil(n/s-1e-9)*s:Math.round(n);
+const BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const CABANG={CNR:"Avicenna Cinere",PML:"Avicenna Pamulang",JGK:"Avicenna Jagakarsa"};
+const SEKOLAH={CNR:"avicenna-cinere",PML:"avicenna-pamulang",JGK:"avicenna-jagakarsa"};
+const KEND={mobil:{nama:"Mobil",kml:13,bbm:["pertalite","pertamax","solar"]},motor:{nama:"Motor",kml:40,bbm:["pertalite","pertamax"]}};
+const BBM={pertalite:"Pertalite",pertamax:"Pertamax",solar:"Solar/Biosolar"};
+const DOK={struk:"Struk pembelian BBM",surat:"Surat tugas / undangan meeting / bukti tujuan dinas",rute:"Catatan jarak tempuh / screenshot rute (Google Maps)"};
+const FAKTOR_JALAN=1.4;
+let harga={pertalite:10000,pertamax:15950,solar:6800},checkpoints=[],rute={},lok={asal:null,tujuan:null},jarak=null,hasilPdf=null;
+
+const jakarta=()=>{const d=new Date(Date.now()+7*3600e3);return {y:d.getUTCFullYear(),m:d.getUTCMonth(),d:d.getUTCDate(),h:d.getUTCHours(),i:d.getUTCMinutes()}};
+const isoHari=()=>{const t=jakarta();return `${t.y}-${String(t.m+1).padStart(2,"0")}-${String(t.d).padStart(2,"0")}`};
+const tglPanjang=v=>{if(!v)return "-";const [y,m,d]=v.split("-");return `${+d} ${BULAN[m-1]} ${y}`};
+const tglSlash=v=>{const [y,m,d]=v.split("-");return `${d}/${m}/${y}`};
+let tmToast;function toast(t){const e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(tmToast);tmToast=setTimeout(()=>e.hidden=true,3200)}
+
+/* ---------- data referensi ---------- */
+async function muatData(){if(!sb)return;
+  try{const [c,h,r]=await Promise.all([sb.from("checkpoint").select("id,nama,jenis,lat,lng,alamat,verif"),sb.from("harga_bbm").select("*").eq("id",1).maybeSingle(),sb.from("rute").select("id,km,sumber")]);
+    if(c.data)checkpoints=c.data.filter(x=>x.lat!=null&&x.lng!=null).sort((a,b)=>({sekolah:0,kantor:1,lainnya:2}[a.jenis]??3)-({sekolah:0,kantor:1,lainnya:2}[b.jenis]??3)||a.nama.localeCompare(b.nama));
+    if(h.data)harga={pertalite:h.data.pertalite,pertamax:h.data.pertamax,solar:h.data.solar};
+    if(r.data)r.data.forEach(x=>rute[x.id]=x);
+  }catch(e){}
+  if($("cabang").value&&!lok.asal)asalSekolah();hitung()}
+function isiBbm(){const k=KEND[$("kend").value],cur=$("bbm").value;$("bbm").innerHTML=k.bbm.map(b=>`<option value="${b}">${BBM[b]} · ${rp(harga[b])}/L</option>`).join("");if(k.bbm.includes(cur))$("bbm").value=cur}
+function asalSekolah(){const c=checkpoints.find(x=>x.id===SEKOLAH[$("cabang").value]);if(c)pilihLok("asal",{nama:c.nama,lat:c.lat,lng:c.lng,id:c.id,ket:"Checkpoint sekolah"})}
+
+/* ---------- pencarian lokasi: checkpoint, OpenStreetMap, atau link Google Maps ---------- */
+function parseKoord(s){if(!s)return null;try{s=decodeURIComponent(s)}catch(e){}
+  const pats=[/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,/[?&](?:q|query|ll|destination)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/,/@(-?\d+\.\d+),(-?\d+\.\d+)/,/\/(-?\d+\.\d+),\s*\+?(-?\d+\.\d+)/,/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/];
+  for(const p of pats){const m=s.match(p);if(m){const lat=+m[1],lng=+m[2];if(Math.abs(lat)<=90&&Math.abs(lng)<=180)return {lat,lng}}}return null}
+function namaDariLink(s){try{const m=decodeURIComponent(s).match(/\/place\/([^/@]+)/);return m?m[1].replace(/\+/g," ").trim():""}catch(e){return ""}}
+const cariJanji={};
+async function cariOsm(q){const u=`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lat=-6.33&lon=106.78&bbox=94.9,-11.1,141.1,6.1`;
+  const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
+  try{const r=await fetch(u,{signal:ac.signal});if(!r.ok)return [];const j=await r.json();
+    return (j.features||[]).map(f=>{const p=f.properties||{},[lng,lat]=f.geometry.coordinates;const nama=p.name||[p.street,p.housenumber].filter(Boolean).join(" ")||p.city||"Lokasi";
+      return {nama,lat,lng,ket:[p.street&&p.name?p.street:"",p.district,p.city||p.county,p.state].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).join(", ")}})}
+  catch(e){return null}finally{clearTimeout(tm)}}
+const JENIS_CP={sekolah:"Sekolah Avicenna",rumah:"Rumah pegawai",kantor:"Kantor / instansi",lainnya:"Lainnya"};
+const ketCp=c=>(JENIS_CP[c.jenis]||"Checkpoint")+(c.alamat?" · "+c.alamat:"")+(c.verif===false?" · belum diverifikasi GA":"");
+/* Asal dan tujuan hanya dari daftar checkpoint. Bila belum ada, pemohon membuat checkpoint baru lengkap. */
+function pasangCari(k){const inp=$(k),box=$(k+"Saran");
+  const tampil=()=>{const q=inp.value.trim(),t=q.toLowerCase();
+    const items=checkpoints.filter(c=>!t||c.nama.toLowerCase().includes(t)||(c.alamat||"").toLowerCase().includes(t)).slice(0,8).map(c=>({nama:c.nama,lat:c.lat,lng:c.lng,id:c.id,ket:ketCp(c)}));
+    box.innerHTML=items.map((x,i)=>`<button type="button" data-i="${i}">${esc(x.nama)}<small>${esc(x.ket)}</small></button>`).join("")
+      +(q&&!items.length?`<div class="ket">"${esc(q)}" belum ada di daftar checkpoint.</div>`:"")
+      +`<button type="button" class="baru" data-baru="1">+ Tambah checkpoint baru${q?` "${esc(q)}"`:""}<small>Lokasi belum ada di daftar? Simpan lengkap dengan alamat dan titik peta.</small></button>`;
+    box.hidden=false;box._items=items};
+  inp.addEventListener("input",()=>{lok[k]=null;$(k+"Pilih").textContent="";hitung();tampil()});
+  inp.addEventListener("focus",()=>{if(!lok[k])tampil()});
+  box.addEventListener("mousedown",e=>e.preventDefault());
+  box.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;box.hidden=true;
+    if(b.dataset.baru){bukaCp(k,lok[k]?"":inp.value.trim());return}pilihLok(k,box._items[+b.dataset.i])});
+  inp.addEventListener("blur",()=>setTimeout(()=>box.hidden=true,150));
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const b=box.querySelector("button[data-i]")||box.querySelector("button[data-baru]");if(b&&!box.hidden)b.click()}if(e.key==="Escape")box.hidden=true})}
+
+/* ---------- checkpoint baru dari pemohon ---------- */
+let cpTarget=null,cpTitik=null,cpUrut=0,cpTm;
+function bukaCp(k,nama){cpTarget=k;cpTitik=null;$("cpJudul").textContent=k==="asal"?"Checkpoint baru untuk asal keberangkatan":"Checkpoint baru untuk tujuan dinas";
+  $("cpNama").value=nama||"";$("cpJenis").value=k==="asal"?"rumah":"kantor";$("cpAlamat").value="";$("cpCari").value="";$("cpLink").value="";$("cpSaran").hidden=true;
+  $("cpErr").hidden=true;tampilTitik();document.querySelectorAll("#cpDlg .kosong").forEach(e=>e.classList.remove("kosong"));$("cpDlg").hidden=false;setTimeout(()=>$(nama?"cpAlamat":"cpNama").focus(),30)}
+function tampilTitik(){const t=cpTitik,e=$("cpTitik");
+  e.innerHTML=t?`✓ Titik lokasi: ${t.lat.toFixed(6)}, ${t.lng.toFixed(6)} <span class="hint">(${esc(t.sumber)})</span> · <a href="https://www.google.com/maps?q=${t.lat},${t.lng}" target="_blank" rel="noopener">cek di Google Maps</a>`:'<span class="hint">Titik lokasi belum dipilih.</span>';e.classList.toggle("ok",!!t)}
+function setTitik(t){cpTitik=t;tampilTitik();$("cpCari").classList.remove("kosong");$("cpErr").hidden=true}
+$("cpDlg").addEventListener("input",()=>$("cpErr").hidden=true);
+function cariCpJalan(){const q=$("cpCari").value.trim(),box=$("cpSaran"),n=++cpUrut;
+  const ko=parseKoord(q);if(ko){box.hidden=true;setTitik({...ko,sumber:"link / koordinat Google Maps"});if(/^https?:/i.test(q))$("cpLink").value=q;if(!$("cpNama").value)$("cpNama").value=namaDariLink(q);return}
+  if(q.length<3){box.hidden=true;return}
+  box.innerHTML='<div class="ket">Mencari di peta...</div>';box.hidden=false;
+  cariOsm(q).then(o=>{if(n!==cpUrut)return;box._items=o||[];
+    box.innerHTML=(o||[]).map((x,i)=>`<button type="button" data-i="${i}">${esc(x.nama)}${x.ket?`<small>${esc(x.ket)}</small>`:""}</button>`).join("")
+      +(o===null?'<div class="ket">Pencarian peta tidak tersedia. Tempel link Google Maps, atau pakai lokasi saya sekarang.</div>':!o.length?'<div class="ket">Tidak ditemukan. Coba kata lain atau tempel link Google Maps.</div>':"")})}
+$("cpCari").addEventListener("input",()=>{clearTimeout(cpTm);cpTm=setTimeout(cariCpJalan,400)});
+$("cpCari").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();cariCpJalan()}});
+$("cpSaran").addEventListener("mousedown",e=>e.preventDefault());
+$("cpSaran").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;const x=$("cpSaran")._items[+b.dataset.i];$("cpSaran").hidden=true;
+  setTitik({lat:x.lat,lng:x.lng,sumber:"peta OpenStreetMap"});$("cpCari").value=x.nama;if(!$("cpNama").value)$("cpNama").value=x.nama;if(!$("cpAlamat").value&&x.ket)$("cpAlamat").value=x.ket});
+$("cpGps").onclick=()=>{if(!navigator.geolocation){toast("Perangkat ini tidak mendukung lokasi");return}const b=$("cpGps");b.disabled=true;b.textContent="Mengambil lokasi...";
+  navigator.geolocation.getCurrentPosition(p=>{b.disabled=false;b.textContent="Pakai lokasi saya sekarang";setTitik({lat:p.coords.latitude,lng:p.coords.longitude,sumber:"lokasi perangkat, akurasi ±"+Math.round(p.coords.accuracy)+" m"})},
+    ()=>{b.disabled=false;b.textContent="Pakai lokasi saya sekarang";toast("Lokasi tidak bisa diambil. Izinkan akses lokasi atau tempel link Google Maps.")},{enableHighAccuracy:true,timeout:15000})};
+$("cpBatal").onclick=()=>{$("cpDlg").hidden=true};
+$("cpSimpan").onclick=async()=>{const e=$("cpErr"),kurang=[];e.hidden=true;
+  [["cpNama","Nama tempat",3],["cpAlamat","Alamat lengkap",10]].forEach(([id,n,min])=>{if($(id).value.trim().length<min){kurang.push(n);$(id).classList.add("kosong")}});
+  if(!cpTitik){kurang.push("Titik lokasi");$("cpCari").classList.add("kosong")}
+  if(kurang.length){e.textContent="Lengkapi dulu: "+kurang.join(", ")+".";e.hidden=false;return}
+  const b=$("cpSimpan");b.disabled=true;b.textContent="Menyimpan...";
+  try{if(!sb)throw new Error("Koneksi ke server gagal. Muat ulang halaman.");
+    const {data:c,error}=await sb.rpc("tambah_checkpoint_publik",{c:{nama:$("cpNama").value.trim(),jenis:$("cpJenis").value,alamat:$("cpAlamat").value.trim(),lat:cpTitik.lat,lng:cpTitik.lng,link:$("cpLink").value.trim(),sumber:cpTitik.sumber}});
+    if(error)throw new Error(error.message||"Checkpoint gagal disimpan.");
+    if(!checkpoints.some(x=>x.id===c.id))checkpoints.push({...c,verif:false});
+    $("cpDlg").hidden=true;pilihLok(cpTarget,{nama:c.nama,lat:c.lat,lng:c.lng,id:c.id,ket:c.baru===false?"Checkpoint yang sudah ada dipakai":"Checkpoint baru tersimpan"});toast(c.baru===false?"Checkpoint dengan nama dan titik yang sama sudah ada, dipakai yang itu":"Checkpoint tersimpan")}
+  catch(x){e.textContent=x.message;e.hidden=false}finally{b.disabled=false;b.textContent="Simpan checkpoint"}};
+function pilihLok(k,x){lok[k]=x;$(k).value=x.nama;$(k).classList.remove("kosong");$(k+"Pilih").textContent="✓ "+(x.ket||"Lokasi dipilih");hitung()}
+
+/* ---------- hitung jarak & biaya ---------- */
+function haversine(a,b){const R=6371,t=x=>x*Math.PI/180;const dLat=t(b.lat-a.lat),dLng=t(b.lng-a.lng);
+  const h=Math.sin(dLat/2)**2+Math.cos(t(a.lat))*Math.cos(t(b.lat))*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+/* Gmaps: tombol buka rute sesuai kendaraan (motor hindari tol). */
+function linkGmaps(){const a=lok.asal,b=lok.tujuan;if(!a||!b)return;$("gmaps").href=$("kend").value==="motor"?`https://www.google.com/maps?saddr=${a.lat},${a.lng}&daddr=${b.lat},${b.lng}&dirflg=t`:`https://www.google.com/maps/dir/?api=1&origin=${a.lat},${a.lng}&destination=${b.lat},${b.lng}&travelmode=driving`}
+/* Rute acuan Google Maps: link wajib + jarak yang diketik pemohon. Peta OSM hanya pembanding. */
+const RE_GM=/^https:\/\/((www\.)?google\.[a-z.]{2,8}\/maps|maps\.google\.[a-z.]{2,8}|maps\.app\.goo\.gl|goo\.gl\/maps)([\/?#]|$)/i;
+function ambilLink(t){const m=String(t||"").match(/https?:\/\/[^\s"'<>]+/i);return m?m[0].replace(/^http:/i,"https:"):""}
+function titikGm(u){let m=u.match(/\/dir\/(-?\d+\.\d+),\s*(-?\d+\.\d+)\/(?:.*?\/)?(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
+  if(m)return [{lat:+m[1],lng:+m[2]},{lat:+m[3],lng:+m[4]}];
+  const d=[...u.matchAll(/!1d(-?\d+\.\d+)!2d(-?\d+\.\d+)/g)].map(x=>({lat:+x[2],lng:+x[1]}));return d.length>=2?[d[0],d[d.length-1]]:null}
+function gm(){const link=ambilLink($("gmLink").value),t=$("gmKm").value.replace(/km/i,"").trim().replace(/\s/g,"");
+  const km=t?Math.round(parseFloat(t.replace(/\.(?=\d{3}\b)/g,"").replace(",","."))*10)/10:NaN;
+  const a=lok.asal,b=lok.tujuan;let galat="",catatan="";
+  if(!link)galat=$("gmLink").value.trim()?"Link tidak dikenali. Salin link dari tombol Bagikan di Google Maps.":"";
+  else if(!RE_GM.test(link)||link.length>1000)galat="Link harus dari Google Maps (google.com/maps atau maps.app.goo.gl).";
+  if(!galat&&t&&!(km>=0.1&&km<=1000))galat="Jarak tidak valid. Tulis angka km, mis. 12,4.";
+  if(!galat&&a&&b&&km>0){const lurus=haversine(a,b);
+    if(km<lurus*0.95)galat=`Jarak ${fkm(km)} km lebih pendek dari jarak garis lurus (${fkm(lurus)} km). Periksa lagi.`;
+    else{const id=a.id&&b.id?[a.id,b.id].sort().join("__"):null,simpan=id&&rute[id]?.km>0?+rute[id].km:0;
+      if(simpan&&Math.abs(simpan-km)/simpan>0.3)catatan=`Jarak ini berbeda jauh dari jarak yang tercatat di SIRBA (${fkm(simpan)} km). Pastikan sesuai jalur yang dilewati; AP akan memeriksa link Anda.`}
+    const tt=link&&titikGm(link);if(!galat&&tt&&(haversine(tt[0],a)>2||haversine(tt[1],b)>2))catatan=(catatan?catatan+" ":"")+"Titik awal/akhir di link tidak sama dengan asal/tujuan yang dipilih.";}
+  return {link,km,galat,catatan,ok:!galat&&!!link&&km>0}}
+function terapkanGm(){const g=gm(),k=$("gmKet");
+  k.textContent=g.galat||(g.ok?`Dipakai ${fkm(g.km)} km sekali jalan dari Google Maps.`+(g.catatan?" "+g.catatan:""):"Isi link dan jarak dari Google Maps.");
+  k.style.color=g.galat?"var(--danger, #c0392b)":g.catatan?"#b26a00":"";
+  if(g.ok)jarak={km:g.km,sumber:"Google Maps (link pemohon)"};
+  else jarak=null;
+  tampilHasil()}
+$("gmLink").addEventListener("input",terapkanGm);$("gmKm").addEventListener("input",terapkanGm);
+$("gmLink").addEventListener("change",()=>{const l=ambilLink($("gmLink").value);if(l&&l!==$("gmLink").value)$("gmLink").value=l;terapkanGm()});
+function hitung(){const a=lok.asal,b=lok.tujuan;jarak=null;
+  if(!a||!b){$("petaBox").hidden=true;tampilHasil();$("oKet").textContent="Pilih asal dan tujuan, lalu isi rute dari Google Maps.";return}
+  if(a.id===b.id||Math.abs(a.lat-b.lat)<1e-6&&Math.abs(a.lng-b.lng)<1e-6){$("petaBox").hidden=true;tampilHasil();$("oKet").textContent="Asal dan tujuan sama. Periksa lagi.";return}
+  $("petaBox").hidden=false;$("oKet").textContent="Isi link rute dan jarak dari Google Maps di kotak di atas, biaya dihitung otomatis.";linkGmaps();terapkanGm()}
+function biaya(){if(!jarak)return null;const k=KEND[$("kend").value],bb=$("bbm").value,h=harga[bb],kmPP=Math.round(Math.round(jarak.km*10)*21/10)/10;
+  /* Konsumsi di bawah 1 liter dibulatkan jadi 1 liter; liter ke-2 dst tidak dibulatkan. */
+  const literAsli=kmPP/k.kml,liter=Math.max(1,literAsli),bbm=up(liter*h,100);return {k,bb,h,km:jarak.km,kmPP,bbm,total:up(bbm,1000),liter,literAsli,sumber:jarak.sumber}}
+function tampilHasil(memuat){const r=biaya();
+  $("oKm").textContent=r?fkm(r.km)+" km":memuat?"...":"-";$("oKmPP").textContent=r?fkm(r.kmPP)+" km":memuat?"...":"-";
+  $("oBbm").textContent=r?rp(r.bbm):"-";$("oTotal").textContent=r?rp(r.total):"Rp 0";
+  if(r)$("oKet").textContent=`${fkm(r.kmPP)} km PP ÷ ${r.k.kml} km/L = ${r.literAsli.toLocaleString("id-ID",{maximumFractionDigits:2})} L${r.literAsli<1?", dibulatkan minimal 1 L":""} × ${rp(r.h)}/L (${BBM[r.bb]}) = ${rp(r.bbm)}, dibulatkan ${rp(r.total)}. Sumber jarak: ${r.sumber}.`+(r.sumber==="estimasi koordinat"?" Rute jalan tidak bisa dihitung saat ini, jadi dipakai estimasi garis lurus × 1,4.":"")}
+
+/* ---------- tanda tangan pemohon: QR ---------- */
+const kodeAcak=()=>{const a=new Uint8Array(5);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase()};
+const jamWib=()=>{const t=jakarta();return `${t.d} ${BULAN[t.m]} ${t.y} ${String(t.h).padStart(2,"0")}.${String(t.i).padStart(2,"0")} WIB`};
+/* ---------- validasi ---------- */
+const WAJIB=[["cabang","Cabang"],["nama","Nama karyawan"],["jabatan","Jabatan / unit"],["tgl","Tanggal perjalanan"],["asal","Asal keberangkatan"],["tujuan","Tujuan dinas"],["keperluan","Keterangan / keperluan"],["ttdNama","Nama penanda tangan"]];
+function cek(){const kurang=[];document.querySelectorAll(".kosong").forEach(e=>e.classList.remove("kosong"));
+  WAJIB.forEach(([id,n])=>{const ok=id==="asal"||id==="tujuan"?!!lok[id]:!!$(id).value.trim();if(!ok){kurang.push(n);$(id).classList.add("kosong")}});
+  const w=$("warn");w.hidden=true;
+  if(kurang.length){w.textContent="Lengkapi dulu: "+kurang.join(", ")+".";w.hidden=false;return false}
+  const t=$("tgl").value;if(t>isoHari()){w.textContent="Tanggal perjalanan tidak boleh setelah hari ini.";w.hidden=false;return false}
+  const g=gm();if(!g.ok){w.textContent=g.galat||"Isi link rute Google Maps dan jarak (km) yang tertera di Google Maps.";w.hidden=false;
+    (!g.link||g.galat&&!/Jarak/.test(g.galat)?$("gmLink"):$("gmKm")).classList.add("kosong");$("gmBox").scrollIntoView({behavior:"smooth",block:"center"});return false}
+  if(!biaya()){w.textContent="Jarak belum selesai dihitung. Tunggu sebentar lalu coba lagi.";w.hidden=false;return false}
+  {const ada=[...document.querySelectorAll('input[name=dok]:checked')].map(x=>x.value),kur=Object.keys(DOK).filter(k=>!ada.includes(k));
+   if(kur.length){w.textContent="Semua dokumen wajib dilampirkan. Centang: "+kur.map(k=>DOK[k]).join(", ")+".";w.hidden=false;$("dokList").scrollIntoView({behavior:"smooth",block:"center"});return false}}
+  if($("dokLainCek").checked&&!$("dokLain").value.trim()){w.textContent="Sebutkan dokumen lainnya, atau hapus centang Lainnya.";w.hidden=false;$("dokLain").classList.add("kosong");return false}
+  return true}
+function data(){const r=biaya(),dok=[...document.querySelectorAll('input[name=dok]:checked')].map(x=>x.value);
+  return {cabang:$("cabang").value,nama:$("nama").value.trim(),nik:$("nik").value.trim(),jabatan:$("jabatan").value.trim(),keperluan:$("keperluan").value.trim(),
+    tanggal:$("tgl").value,tglAju:isoHari(),asal:lok.asal.nama,asalId:lok.asal.id||"",tujuan:lok.tujuan.nama,tujuanId:lok.tujuan.id||"",
+    asalKoord:[lok.asal.lat,lok.asal.lng],tujuanKoord:[lok.tujuan.lat,lok.tujuan.lng],
+    kendaraanId:$("kend").value,unitKendaraan:$("unitKend").value.trim(),bbmId:r.bb,km:r.km,total:r.total,sumberJarak:r.sumber,linkRute:gm().link,
+    dokumen:dok,dokumenLain:dok.includes("lain")?$("dokLain").value.trim():"",ttdPemohon:{nama:$("ttdNama").value.trim(),setuju:true,kode:kodeAcak(),waktuTeks:jamWib()},_r:r}}
+
+
+/* ---------- kirim ---------- */
+$("form").addEventListener("submit",e=>{e.preventDefault();if(!cek())return;const d=data(),r=d._r;
+  $("dlgRingkas").innerHTML=`<dt>Pemohon</dt><dd>${esc(d.nama)}</dd><dt>Cabang</dt><dd>${esc(CABANG[d.cabang])}</dd><dt>Rute</dt><dd>${esc(d.asal)} ⇄ ${esc(d.tujuan)}</dd><dt>Jarak PP</dt><dd>${fkm(r.kmPP)} km</dd><dt>Total</dt><dd>${rp(r.total)}</dd>`;
+  $("dlgNama").textContent=d.ttdPemohon.nama;$("dlgSetuju").checked=false;$("dlgOk").disabled=true;$("dlgErr").hidden=true;$("dlg").hidden=false;$("dlgSetuju").focus()});
+$("dlgSetuju").onchange=()=>$("dlgOk").disabled=!$("dlgSetuju").checked;
+$("dlgBatal").onclick=()=>{$("dlg").hidden=true};
+$("dlgOk").onclick=async()=>{if(!$("dlgSetuju").checked)return;const ok=$("dlgOk"),err=$("dlgErr");ok.disabled=true;$("dlgBatal").disabled=true;err.hidden=true;
+  try{if(!sb||!window.PDFLib||!window.qrcode||!window.SirbaFormPdf)throw new Error("Halaman belum termuat lengkap. Periksa koneksi lalu muat ulang.");
+    ok.textContent="Membuat PDF...";const d=data(),bytes=await SirbaFormPdf.buat({...d,r:{kml:d._r.k.kml,h:d._r.h,bbmNama:BBM[d._r.bb],kmPP:d._r.kmPP,bbm:d._r.bbm,total:d._r.total,sumber:d._r.sumber}});
+    ok.textContent="Mengirim...";const path=`${d.cabang}/publik/${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10).replace(/[^a-z0-9]/g,"x")}.pdf`;
+    const u=await sb.storage.from("pdf").upload(path,new Blob([bytes],{type:"application/pdf"}),{contentType:"application/pdf"});if(u.error)throw new Error("PDF gagal diunggah. Coba lagi.");
+    const {_r,asalKoord,tujuanKoord,...kirim}=d;const {data:res,error}=await sb.rpc("ajukan_publik",{d:{...kirim,berkas:path}});
+    if(error)throw new Error(error.message||"Pengajuan gagal disimpan.");
+    hasilPdf={bytes,nama:`pengajuan-${(res?.no||"bbm").replace(/[^A-Za-z0-9]+/g,"-")}.pdf`};
+    $("dlg").hidden=true;$("form").hidden=true;$("sukses").hidden=false;$("sNo").textContent=res?.no||"";
+    $("sKet").textContent=`Total ${rp(res?.total??d._r.total)}. Pengajuan sudah masuk ke Finance AP ${CABANG[d.cabang]} untuk disetujui. Simpan nomor ini, lalu serahkan lampiran fisik ke tim GA.`;
+    window.scrollTo({top:0,behavior:"smooth"})}
+  catch(e){err.textContent=e.message||"Terjadi kesalahan. Coba lagi.";err.hidden=false}
+  finally{ok.textContent="Setuju dan tanda tangani";ok.disabled=!$("dlgSetuju").checked;$("dlgBatal").disabled=false}};
+$("sUnduh").onclick=()=>{if(!hasilPdf)return;const u=URL.createObjectURL(new Blob([hasilPdf.bytes],{type:"application/pdf"})),a=document.createElement("a");a.href=u;a.download=hasilPdf.nama;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)};
+$("sBaru").onclick=()=>location.reload();
+
+/* ---------- init ---------- */
+$("tglAju").value=tglPanjang(isoHari());$("tgl").max=isoHari();$("tgl").value=isoHari();
+isiBbm();$("kend").onchange=()=>{isiBbm();hitung()};$("bbm").onchange=()=>tampilHasil();
+$("cabang").onchange=()=>{if(!lok.asal||checkpoints.some(c=>c.id===lok.asal.id&&c.jenis==="sekolah"))asalSekolah()};
+let ttdDiubah=false;$("ttdNama").addEventListener("input",()=>ttdDiubah=!!$("ttdNama").value);
+$("nama").addEventListener("input",()=>{if(!ttdDiubah)$("ttdNama").value=$("nama").value});
+$("dokLainCek").onchange=()=>{$("dokLain").hidden=!$("dokLainCek").checked;if(!$("dokLain").hidden)$("dokLain").focus()};
+document.addEventListener("input",e=>e.target.classList?.remove("kosong"));
+pasangCari("asal");pasangCari("tujuan");
+if(!sb)toast("Koneksi ke server gagal dimuat. Muat ulang halaman.");
+muatData().then(()=>{isiBbm();tampilHasil()});
+</script>
+</body>
+</html>
