@@ -282,7 +282,7 @@ const LM_NAMA={"LM 1.1":"Standardisasi SOP & Instruksi Kerja","LM 1.2":"Buku Ped
  "LM 3.1":"Struktur Kinerja Personel","LM 3.2":"PLC & Coaching","LM 3.3":"Monitoring Kinerja & Dashboard KPI"};
 const ST_LABEL={selesai:"Selesai",terlambat:"Selesai terlambat",berjalan:"Sedang dikerjakan",rencana:"Belum dikerjakan",gagal:"Tidak terlaksana"};
 
-let akun=null, data={program:{},akt:[],status:new Map()}, view="beranda", filt={orang:null,q:"",grup:"aktif"}, chan=null, notifTimer=null;
+let akun=null, data={program:{},akt:[],status:new Map()}, view="beranda", filt={orang:null,q:"",grup:"aktif",lingkup:"tim"}, chan=null, notifTimer=null;
 
 /* ---------- waktu (WIB) ---------- */
 function sekarang(){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta",year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date());const g=t=>+p.find(x=>x.type===t).value;return {y:g("year"),m:g("month"),d:g("day")};}
@@ -312,6 +312,7 @@ async function masuk(){
   akun=a;$("login").hidden=true;$("app").hidden=false;
   $("meAv").textContent=a.nama[0];$("meAv").style.background=WARNA_ORANG[a.orang]||"#1d3a8a";$("meNm").textContent=a.nama;
   if(a.peran==="staf") filt.orang=a.orang;
+  filt.lingkup=a.orang?"saya":"tim";
   if(a.harus_ganti) $("gantiSandi").hidden=false;
   await muat();langganan();
   route();mulaiPengingat();
@@ -374,7 +375,11 @@ function tugasTerbuka(orang){ // jadwal s.d. bulan ini yang belum selesai
     const telat=b<cur, urgent=telat||(b===cur&&(prio(a)==="Tinggi"||hariSisa()<=10));out.push({a,b,s,telat,urgent});}
   return out.sort((x,y)=>(y.telat-x.telat)||(x.b-y.b)||((prio(y.a)==="Tinggi")-(prio(x.a)==="Tinggi")));
 }
-const orangSaya=()=>akun.peran==="staf"?akun.orang:null;
+const orangSaya=()=>akun.peran==="staf"||(akun.orang&&filt.lingkup==="saya")?akun.orang:null;
+// kadep yang juga punya tugas sendiri bisa beralih antara tugasnya dan seluruh tim
+const segLingkup=()=>akun.peran!=="staf"&&akun.orang?`<div class="seg" id="segLk"><button data-lk="saya" class="${filt.lingkup==="saya"?"on":""}">Tugas saya</button><button data-lk="tim" class="${filt.lingkup==="tim"?"on":""}">Seluruh tim</button></div>`:"";
+function ikatLingkup(){document.querySelectorAll("#segLk [data-lk]").forEach(b=>b.onclick=()=>{filt.lingkup=b.dataset.lk;filt.orang=null;render();});}
+const tugasBersama=a=>/\d\./.test(data.program[a.program_id]?.pic||"");
 
 /* ---------- routing ---------- */
 function route(){view=(location.hash||"#beranda").slice(1);if(!["beranda","tugas","jadwal","program"].includes(view))view="beranda";
@@ -407,13 +412,13 @@ function vBeranda(){
      <div class="score"><span class="big num" style="font-size:24px">${fmt(avg)}</span><span class="hint">rata-rata capaian s.d. ${BULAN[cur]||"-"}</span></div>
      <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">${vals.map(x=>`<div class="kv"><span>${x.o}</span><b class="num">${fmt(x.v)}</b></div><div class="bar"><i style="width:${Math.min(100,x.v)}%;background:var(--${c})"></i></div>`).join("")}</div></div>`;}).join("");
   const top=t.slice(0,6).map(itemTugas).join("");
-  $("view").innerHTML=`<div class="h-title"><div><h2>${salam}, ${esc(akun.nama)}</h2><p>${BULAN_PANJANG[cur]||""} · Program Kerja GA TA 2026–2027</p></div></div>
+  $("view").innerHTML=`<div class="h-title"><div><h2>${salam}, ${esc(akun.nama)}</h2><p>${BULAN_PANJANG[cur]||""} · Program Kerja GA TA 2026–2027</p></div>${segLingkup()}</div>
   ${banner}
   <div class="sec"><h3>${me?"Skor KPI saya":"Skor KPI tim"}</h3><div class="grid4">${kartu}</div>
   <p class="hint">Skor jalur hanya menghitung jadwal sampai bulan berjalan, jadi ini ukuran yang adil untuk saat ini. Skor tahunan memakai rumus spreadsheet: bulan yang belum tiba ikut dihitung 0. Target: ≥80 (Grade B).</p></div>
   <div class="sec"><h3>Capaian per WIG</h3><div class="grid3">${wigs}</div></div>
   ${top?`<div class="sec"><h3>Paling mendesak</h3><div class="list">${top}</div>${t.length>6?`<p><a href="#tugas">Lihat semua ${t.length} tugas →</a></p>`:""}</div>`:""}`;
-  document.querySelectorAll(".pcard").forEach(c=>c.onclick=()=>{filt.orang=c.dataset.o;location.hash="#tugas";});
+  document.querySelectorAll(".pcard").forEach(c=>c.onclick=()=>{filt.orang=c.dataset.o;location.hash="#tugas";});ikatLingkup();
   ikatTombol();
 }
 
@@ -425,7 +430,7 @@ function itemTugas(x){
   const bisa=bolehUbah(a),done=s.status==="selesai"||s.status==="terlambat";
   return `<div class="task ${c}"><span class="pid c-${c}">${esc(a.program_id)}</span>
    <div class="ttl">${esc(a.aktivitas)}<small>${esc(p?.nama||a.program_label)}</small>
-    <div class="meta">${status}${st}${prio(a)==="Tinggi"?`<span class="chip c-bad">Prioritas tinggi</span>`:""}<span class="chip c-${c}">${a.wig}</span>${orangSaya()?"":`<span class="chip c-mut">${a.orang}</span>`}${s.evidence?`<a class="chip c-run" href="${esc(s.evidence)}" target="_blank" rel="noopener">Bukti ↗</a>`:""}</div></div>
+    <div class="meta">${status}${st}${prio(a)==="Tinggi"?`<span class="chip c-bad">Prioritas tinggi</span>`:""}${tugasBersama(a)?`<span class="chip c-run">Tugas bersama tim</span>`:""}<span class="chip c-${c}">${a.wig}</span>${orangSaya()?"":`<span class="chip c-mut">${a.orang}</span>`}${s.evidence?`<a class="chip c-run" href="${esc(s.evidence)}" target="_blank" rel="noopener">Bukti ↗</a>`:""}</div></div>
    <div class="act">${bisa?(done?`<button class="btn btn-g btn-sm" data-act="ubah" data-k="${a.id}:${b}">Ubah</button>`:`<button class="btn btn-ok btn-sm" data-act="selesai" data-k="${a.id}:${b}">Tandai selesai</button>${s.status!=="berjalan"?`<button class="btn btn-g btn-sm" data-act="jalan" data-k="${a.id}:${b}">Sedang dikerjakan</button>`:""}`):""}</div></div>`;
 }
 const bolehUbah=a=>akun.peran!=="staf"||a.orang===akun.orang;
@@ -470,9 +475,10 @@ function vTugas(){
   const pilihOrang=me?"":`<select class="sel" id="fOrang"><option value="">Seluruh tim</option>${ORANG.map(x=>`<option ${x===o?"selected":""}>${x}</option>`).join("")}</select>`;
   const isi=filt.grup==="aktif"?blok("Terlambat",g.telat,"c-bad","Tidak ada tugas terlambat.")+blok(`Jatuh tempo ${BULAN_PANJANG[cur]||""}`,g.kini,"c-warn","Semua tugas bulan ini sudah selesai.")+blok("Dua bulan ke depan",g.depan,"c-mut","Belum ada jadwal.")
     :blok("Sudah selesai",g.selesai.slice(0,150),"c-ok","Belum ada tugas yang selesai.");
-  $("view").innerHTML=`<div class="h-title"><div><h2>${me?"Tugas saya":"Tugas tim"}</h2><p>${o?o+" · "+WIL[o]:"Anita, Tasya, Chico, Salsa"}</p></div></div>
+  $("view").innerHTML=`<div class="h-title"><div><h2>${me?"Tugas saya":"Tugas tim"}</h2><p>${o?o+" · "+WIL[o]:"Anita, Tasya, Chico, Salsa"}</p></div>${segLingkup()}</div>
    <div class="toolbar">${pilihOrang}<div class="seg"><button data-g="aktif" class="${filt.grup==="aktif"?"on":""}">Perlu dikerjakan</button><button data-g="selesai" class="${filt.grup==="selesai"?"on":""}">Sudah selesai</button></div>
    <input class="search" id="fQ" type="search" placeholder="Cari tugas atau kode program…" value="${esc(filt.q)}"></div>${isi}`;
+  ikatLingkup();
   if($("fOrang"))$("fOrang").onchange=e=>{filt.orang=e.target.value||null;render();};
   document.querySelectorAll(".seg [data-g]").forEach(b=>b.onclick=()=>{filt.grup=b.dataset.g;render();});
   const q=$("fQ");q.oninput=()=>{filt.q=q.value;clearTimeout(q._t);q._t=setTimeout(()=>{render();const n=$("fQ");n.focus();n.setSelectionRange(n.value.length,n.value.length);},250);};
@@ -488,9 +494,10 @@ function vJadwal(){
   const tr=rows.map(a=>{const c=wcls(a.wig);return `<tr><td class="l"><span class="chip c-${c}" style="margin-right:6px">${esc(a.program_id)}</span><b>${esc(a.aktivitas)}</b><div class="hint">${esc(a.program_label)}</div></td>${BULAN.map((m,b)=>{const s=data.status.get(a.id+":"+b);if(!s)return "<td></td>";
      const telat=b<cur&&!["selesai","terlambat"].includes(s.status);const cls=telat?"d-telat":"d-"+s.status;const sym={selesai:"✓",terlambat:"✓",berjalan:"…",rencana:"",gagal:"✕"}[s.status];
      return `<td><button class="dot ${cls}" title="${BULAN_PANJANG[b]}: ${ST_LABEL[s.status]}${telat?" (terlambat)":""}" ${bolehUbah(a)?`data-cell="${a.id}:${b}"`:"disabled"}>${telat?"!":sym}</button></td>`;}).join("")}</tr>`;}).join("");
-  $("view").innerHTML=`<div class="h-title"><div><h2>Jadwal bulanan</h2><p>${o} · skor jalur ${fmt(sk.total)} (${grade(sk.total)}) · ketuk kotak untuk mengubah</p></div>${sel}</div>
+  $("view").innerHTML=`<div class="h-title"><div><h2>Jadwal bulanan</h2><p>${o} · skor jalur ${fmt(sk.total)} (${grade(sk.total)}) · ketuk kotak untuk mengubah</p></div>${segLingkup()}${sel}</div>
    <div class="legend"><span><i class="dot d-selesai">✓</i>Selesai</span><span><i class="dot d-terlambat">✓</i>Selesai terlambat (90%)</span><span><i class="dot d-berjalan">…</i>Sedang dikerjakan</span><span><i class="dot d-telat">!</i>Terlambat</span><span><i class="dot d-rencana"></i>Belum jatuh tempo</span><span><i class="dot d-gagal">✕</i>Tidak terlaksana</span></div>
    <div class="mx-wrap"><table class="mx"><thead><tr><th class="l">Aktivitas</th>${BULAN.map((m,b)=>`<th class="${b===cur?"now":""}">${m}</th>`).join("")}</tr></thead><tbody>${tr||`<tr><td class="l" colspan="13">Belum ada aktivitas.</td></tr>`}</tbody></table></div>`;
+  ikatLingkup();
   document.querySelectorAll(".seg [data-o]").forEach(b=>b.onclick=()=>{filt.orang=b.dataset.o;render();});
   document.querySelectorAll("[data-cell]").forEach(b=>b.onclick=()=>{const [id,m]=b.dataset.cell.split(":").map(Number);formSelesai(id,m);});
 }
